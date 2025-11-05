@@ -9,18 +9,22 @@ import {
   Paper,
 } from "@mui/material";
 
+const SOCKET_URL =
+  import.meta.env.VITE_SOCKET_URL ||
+  "https://chatapp-production-eeff.up.railway.app";
 const App = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
   // Create socket connection only once
-  const socket = useMemo(
-    () =>
-      io("http://localhost:5050", {
-        withCredentials: true,
-      }),
-    []
-  );
+
+  const socket = useMemo(() => {
+    return io(SOCKET_URL, {
+      transports: ["websocket", "polling"],
+      secure: true,
+      withCredentials: true,
+    });
+  }, []);
 
   // Handle incoming messages
   useEffect(() => {
